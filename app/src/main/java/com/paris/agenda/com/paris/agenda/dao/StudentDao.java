@@ -94,4 +94,13 @@ public class StudentDao extends SQLiteOpenHelper {
         db.update("Students", date, "id=?", params);
 
     }
+
+    public boolean isStudent(String phone){
+           SQLiteDatabase db = getReadableDatabase();
+          Cursor c =  db.rawQuery("SELECT * FROM Students WHERE phone = ?", new String[]{phone});
+          int result = c.getCount();
+          c.close();
+          return result >0;
+
+    }
 }
