@@ -2,9 +2,9 @@ package com.paris.agenda;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -55,7 +55,8 @@ public class FormActivity extends AppCompatActivity {
                 Intent intentCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 localSavePhoto = getExternalFilesDir(null) + "/" + System.currentTimeMillis() + ".jpg";
                 File filePhoto = new File(localSavePhoto);
-                intentCamera.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(filePhoto));
+                intentCamera.putExtra(MediaStore.EXTRA_OUTPUT,
+                        FileProvider.getUriForFile(FormActivity.this, BuildConfig.APPLICATION_ID + ".provider", filePhoto));
                 startActivityForResult(intentCamera, REQUEST_CODE_IMAGE_CAMERA);
 
             }
