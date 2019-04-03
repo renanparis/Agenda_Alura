@@ -4,15 +4,15 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -25,19 +25,34 @@ import java.util.List;
 public class ListStudentsActivity extends AppCompatActivity {
 
     public static final int REQUEST_CODE_CALL_PHONE = 111;
+    public static final int REQUEST_CODE_SMS = 100;
     private ListView listStudents;
 
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lits_students);
 
+        checkPermission();
+
+
         final ListView listStudents = configClickList();
+
+
 
         configFab();
 
         registerForContextMenu(listStudents);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void checkPermission() {
+        if(checkSelfPermission(Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED){
+            requestPermissions(new String[]{Manifest.permission.RECEIVE_SMS}, REQUEST_CODE_SMS);
+
+        }
     }
 
     private void configFab() {
