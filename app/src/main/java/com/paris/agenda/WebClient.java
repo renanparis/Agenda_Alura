@@ -16,7 +16,6 @@ public class WebClient {
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestProperty("Content-type", "application/json");
             connection.setRequestProperty("Accept", "application/json");
-            connection.setRequestMethod("POST");
 
             connection.setDoOutput(true);
             connection.setDoInput(true);

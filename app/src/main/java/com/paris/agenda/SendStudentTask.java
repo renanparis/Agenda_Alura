@@ -30,9 +30,9 @@ public class SendStudentTask extends AsyncTask<Void, Void, String> {
         String json = convert.convertToJSON(students);
 
         WebClient client = new WebClient();
-        String responseServer = client.post(json);
+        String averegeNotes = client.post(json);
 
-        return responseServer;
+        return averegeNotes;
     }
 
     @Override
@@ -42,9 +42,9 @@ public class SendStudentTask extends AsyncTask<Void, Void, String> {
     }
 
     @Override
-    protected void onPostExecute(String responseServer) {
+    protected void onPostExecute(String averageNotes) {
         dialog.dismiss();
 
-        Toast.makeText(context, responseServer, Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "", Toast.LENGTH_LONG).show();
     }
 }
