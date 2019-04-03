@@ -4,6 +4,7 @@
     
     <uses-permission android:name="android.permission.CALL_PHONE"></uses-permission>
     <uses-permission android:name="android.permission.RECEIVE_SMS"></uses-permission>
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
 
     <application
         android:allowBackup="true"
@@ -12,11 +13,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".FormActivity">
+        <activity android:name=".ui.FormActivity">
 
         </activity>
 
-        <activity android:name=".ListStudentsActivity">
+        <activity android:name=".ui.ListStudentsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

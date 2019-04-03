@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 
 import com.paris.agenda.modelo.Student;
+import com.paris.agenda.ui.FormActivity;
 
 public class FormData {
 

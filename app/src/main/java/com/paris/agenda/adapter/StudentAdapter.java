@@ -10,7 +10,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.paris.agenda.ListStudentsActivity;
 import com.paris.agenda.R;
 import com.paris.agenda.modelo.Student;
 

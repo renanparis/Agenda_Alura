@@ -1,4 +1,4 @@
-package com.paris.agenda.com.paris.agenda.dao;
+package com.paris.agenda.com.paris.agenda.db;
 
 import android.content.ContentValues;
 import android.content.Context;

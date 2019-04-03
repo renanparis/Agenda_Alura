@@ -1,4 +1,4 @@
-package com.paris.agenda;
+package com.paris.agenda.ui;
 
 import android.Manifest;
 import android.content.Intent;
@@ -16,11 +16,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
+import com.paris.agenda.R;
+import com.paris.agenda.SendStudentTask;
 import com.paris.agenda.adapter.StudentAdapter;
-import com.paris.agenda.com.paris.agenda.dao.StudentDao;
-import com.paris.agenda.json.StudentConvert;
+import com.paris.agenda.com.paris.agenda.db.StudentDao;
 import com.paris.agenda.modelo.Student;
 
 import java.util.List;
@@ -58,17 +58,8 @@ public class ListStudentsActivity extends AppCompatActivity {
 
         switch(item.getItemId()){
             case R.id.menu_list_students_send:
-                StudentDao dao = new StudentDao(this);
-                List<Student> students = dao.searchStudents();
-                dao.close();
-                StudentConvert convert = new StudentConvert();
-                String json = convert.convertToJSON(students);
-
-                WebClient client = new WebClient();
-                String responseServer = client.post(json);
-
-                Toast.makeText(ListStudentsActivity.this, responseServer, Toast.LENGTH_LONG).show();
-                break;
+            new SendStudentTask(this).execute();
+            break;
         }
         return super.onOptionsItemSelected(item);
     }

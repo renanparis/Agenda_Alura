@@ -1,4 +1,4 @@
-package com.paris.agenda;
+package com.paris.agenda.ui;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,7 +12,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.paris.agenda.com.paris.agenda.dao.StudentDao;
+import com.paris.agenda.BuildConfig;
+import com.paris.agenda.FormData;
+import com.paris.agenda.R;
+import com.paris.agenda.com.paris.agenda.db.StudentDao;
 import com.paris.agenda.modelo.Student;
 
 import java.io.File;

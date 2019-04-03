@@ -10,7 +10,7 @@ import android.telephony.SmsMessage;
 import android.widget.Toast;
 
 import com.paris.agenda.R;
-import com.paris.agenda.com.paris.agenda.dao.StudentDao;
+import com.paris.agenda.com.paris.agenda.db.StudentDao;
 
 public class SmsReceiver extends BroadcastReceiver {
     @RequiresApi(api = Build.VERSION_CODES.M)

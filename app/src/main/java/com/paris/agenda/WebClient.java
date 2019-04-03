@@ -16,14 +16,19 @@ public class WebClient {
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestProperty("Content-type", "application/json");
             connection.setRequestProperty("Accept", "application/json");
-            connection.connect();
+            connection.setRequestMethod("POST");
+
             connection.setDoOutput(true);
+            connection.setDoInput(true);
 
             PrintStream outPut = new PrintStream(connection.getOutputStream());
             outPut.println(json);
 
+            connection.connect();
+
             Scanner scanner = new Scanner(connection.getInputStream());
             String responseServer = scanner.next();
+
             return responseServer;
 
         } catch (MalformedURLException e) {
