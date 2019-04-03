@@ -16,7 +16,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import com.paris.agenda.adapter.StudentAdapter;
@@ -65,7 +64,10 @@ public class ListStudentsActivity extends AppCompatActivity {
                 StudentConvert convert = new StudentConvert();
                 String json = convert.convertToJSON(students);
 
-                Toast.makeText(ListStudentsActivity.this, json, Toast.LENGTH_LONG).show();
+                WebClient client = new WebClient();
+                String responseServer = client.post(json);
+
+                Toast.makeText(ListStudentsActivity.this, responseServer, Toast.LENGTH_LONG).show();
                 break;
         }
         return super.onOptionsItemSelected(item);
