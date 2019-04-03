@@ -45,6 +45,6 @@ public class SendStudentTask extends AsyncTask<Void, Void, String> {
     protected void onPostExecute(String averageGrade) {
         dialog.dismiss();
 
-        Toast.makeText(context, "", Toast.LENGTH_LONG).show();
+        Toast.makeText(context, averageGrade, Toast.LENGTH_LONG).show();
     }
 }
