@@ -10,14 +10,18 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Switch;
+import android.widget.Toast;
 
 import com.paris.agenda.adapter.StudentAdapter;
 import com.paris.agenda.com.paris.agenda.dao.StudentDao;
+import com.paris.agenda.json.StudentConvert;
 import com.paris.agenda.modelo.Student;
 
 import java.util.List;
@@ -37,14 +41,34 @@ public class ListStudentsActivity extends AppCompatActivity {
 
         checkPermission();
 
-
         final ListView listStudents = configClickList();
-
-
 
         configFab();
 
         registerForContextMenu(listStudents);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_list_students, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch(item.getItemId()){
+            case R.id.menu_list_students_send:
+                StudentDao dao = new StudentDao(this);
+                List<Student> students = dao.searchStudents();
+                dao.close();
+                StudentConvert convert = new StudentConvert();
+                String json = convert.convertToJSON(students);
+
+                Toast.makeText(ListStudentsActivity.this, json, Toast.LENGTH_LONG).show();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
