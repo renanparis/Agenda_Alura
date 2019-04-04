@@ -14,11 +14,11 @@ public class StudentConvert {
 
         JSONStringer js = new JSONStringer();
         try {
-            js.object().key("List").array().object().key("student").array();
+            js.object().key("list").array().object().key("aluno").array();
             for (Student student: students) {
                 js.object();
-                js.key("name").value(student.getName());
-                js.key("grade").value(student.getGrade());
+                js.key("nome").value(student.getName());
+                js.key("nota").value(student.getGrade());
                 js.endObject();
             }
             js.endArray().endObject().endArray().endObject();
