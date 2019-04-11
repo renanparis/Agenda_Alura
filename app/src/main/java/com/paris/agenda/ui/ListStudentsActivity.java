@@ -60,6 +60,11 @@ public class ListStudentsActivity extends AppCompatActivity {
             case R.id.menu_list_students_send:
             new SendStudentTask(this).execute();
             break;
+
+            case R.id.menu_list_students_receiver:
+                Intent goToTest = new Intent(this, TestActivity.class);
+                startActivity(goToTest);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

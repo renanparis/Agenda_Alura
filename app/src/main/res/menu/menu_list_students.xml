@@ -10,4 +10,12 @@
 
     </item>
 
+    <item
+        android:id="@+id/menu_list_students_receiver"
+        android:title="Receiver Matters"
+        android:icon="@drawable/ic_receber"
+        app:showAsAction="always">
+
+    </item>
+
 </menu>
