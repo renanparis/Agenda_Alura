@@ -56,6 +56,16 @@ public class StudentAdapter extends BaseAdapter {
         TextView fieldPhone = view.findViewById(R.id.activity_list_item_phone);
         fieldPhone.setText(student.getPhone());
 
+        TextView fieldAddress = view.findViewById(R.id.activity_list_item_address);
+        if (fieldAddress!= null){
+            fieldAddress.setText(student.getAddress());
+        }
+
+        TextView fieldSite = view.findViewById(R.id.activity_list_item_site);
+        if (fieldSite != null){
+            fieldSite.setText(student.getSite());
+        }
+
         ImageView fieldPhoto = view.findViewById(R.id.activity_list_item_image);
         String localSavePhoto = student.getPhoto();
 
