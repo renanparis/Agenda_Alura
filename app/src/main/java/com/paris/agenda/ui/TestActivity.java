@@ -1,5 +1,6 @@
 package com.paris.agenda.ui;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -49,7 +50,9 @@ public class TestActivity extends AppCompatActivity {
              @Override
              public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                  Test test = (Test) parent.getItemAtPosition(position);
-                 Toast.makeText(TestActivity.this, "A matéria " + test, Toast.LENGTH_SHORT).show();
+                 Intent goToDetails = new Intent(TestActivity.this, DetailsTestActivity.class);
+                 goToDetails.putExtra("test", test);
+                 startActivity(goToDetails);
              }
          });
 

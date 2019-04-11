@@ -1,16 +1,17 @@
 package com.paris.agenda.modelo;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Test {
+public class Test implements Serializable {
 
     private String matter;
-    private String data;
+    private String date;
     private List themes;
 
-    public Test(String matter, String data, List themes) {
+    public Test(String matter, String date, List themes) {
         this.matter = matter;
-        this.data = data;
+        this.date = date;
         this.themes = themes;
     }
 
@@ -30,12 +31,12 @@ public class Test {
         this.matter = matter;
     }
 
-    public String getData() {
-        return data;
+    public String getDate() {
+        return date;
     }
 
-    public void setData(String data) {
-        this.data = data;
+    public void setDate(String date) {
+        this.date = date;
     }
 
 
