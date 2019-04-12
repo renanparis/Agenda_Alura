@@ -13,6 +13,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.paris.agenda.DetailsTestFragment;
 import com.paris.agenda.R;
 import com.paris.agenda.TestFragment;
 import com.paris.agenda.modelo.Test;
@@ -31,9 +32,17 @@ public class TestActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fx = fragmentManager.beginTransaction();
         fx.replace(R.id.activity_test_frame, new TestFragment());
+        if (confirmLandscapeMode()){
+            fx.replace(R.id.activity_details_test_frame, new DetailsTestFragment());
+    }
+
         fx.commit();
 
 
+    }
+
+    private boolean confirmLandscapeMode() {
+      return getResources().getBoolean(R.bool.landscapemode);
     }
 
 
