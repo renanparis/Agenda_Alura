@@ -14,6 +14,7 @@ import android.widget.ListView;
 
 import com.paris.agenda.modelo.Test;
 import com.paris.agenda.ui.DetailsTestActivity;
+import com.paris.agenda.ui.TestActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,9 +51,9 @@ public class TestFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Test test = (Test) parent.getItemAtPosition(position);
-                Intent goToDetails = new Intent(view.getContext(), DetailsTestActivity.class);
-                goToDetails.putExtra("test", test);
-                startActivity(goToDetails);
+
+               TestActivity testActivity = (TestActivity) getActivity();
+               testActivity.selectTest(test);
             }
         });
 

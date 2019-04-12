@@ -32,9 +32,9 @@ public class TestActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fx = fragmentManager.beginTransaction();
         fx.replace(R.id.activity_test_frame, new TestFragment());
-        if (confirmLandscapeMode()){
+        if (confirmLandscapeMode()) {
             fx.replace(R.id.activity_details_test_frame, new DetailsTestFragment());
-    }
+        }
 
         fx.commit();
 
@@ -42,8 +42,27 @@ public class TestActivity extends AppCompatActivity {
     }
 
     private boolean confirmLandscapeMode() {
-      return getResources().getBoolean(R.bool.landscapemode);
+        return getResources().getBoolean(R.bool.landscapemode);
     }
 
 
+    public void selectTest(Test test) {
+
+        FragmentManager manager = getSupportFragmentManager();
+        if (!confirmLandscapeMode()) {
+
+            FragmentTransaction fx = manager.beginTransaction();
+            DetailsTestFragment detailsFragment = new DetailsTestFragment();
+            Bundle params = new Bundle();
+            params.putSerializable("test", test);
+            detailsFragment.setArguments(params);
+            fx.replace(R.id.activity_test_frame, detailsFragment);
+            fx.addToBackStack(null);
+            fx.commit();
+        } else {
+            DetailsTestFragment detailsTestFragment =
+                    (DetailsTestFragment) manager.findFragmentById(R.id.activity_details_test_frame);
+            detailsTestFragment.fillField(test);
+        }
+    }
 }
