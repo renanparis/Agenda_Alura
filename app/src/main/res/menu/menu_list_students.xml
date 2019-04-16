@@ -18,4 +18,12 @@
 
     </item>
 
+    <item
+        android:id="@+id/menu_item_students_map"
+        android:title="Visualizae Mapa"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_mapa">
+
+    </item>
+
 </menu>

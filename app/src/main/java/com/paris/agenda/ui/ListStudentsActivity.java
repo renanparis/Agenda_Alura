@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.paris.agenda.MapsActivity;
 import com.paris.agenda.R;
 import com.paris.agenda.SendStudentTask;
 import com.paris.agenda.adapter.StudentAdapter;
@@ -56,22 +57,26 @@ public class ListStudentsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.menu_list_students_send:
-            new SendStudentTask(this).execute();
-            break;
+                new SendStudentTask(this).execute();
+                break;
 
             case R.id.menu_list_students_receiver:
                 Intent goToTest = new Intent(this, TestActivity.class);
                 startActivity(goToTest);
                 break;
+
+            case R.id.menu_item_students_map:
+                Intent goToMap = new Intent(this, MapsActivity.class);
+                startActivity(goToMap);
         }
         return super.onOptionsItemSelected(item);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void checkPermission() {
-        if(checkSelfPermission(Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED){
+        if (checkSelfPermission(Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.RECEIVE_SMS}, REQUEST_CODE_SMS);
 
         }
