@@ -41,6 +41,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
             }
         }
         dao.close();
+        new Locator(getContext(), googleMap);
 
 
         LatLng position = searchCoordinatesAddress("Rua General Luis Barbedo, 167, Pirassununga");
