@@ -17,7 +17,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
-import com.paris.agenda.MapsActivity;
 import com.paris.agenda.R;
 import com.paris.agenda.SendStudentTask;
 import com.paris.agenda.adapter.StudentAdapter;
@@ -68,7 +67,7 @@ public class ListStudentsActivity extends AppCompatActivity {
                 break;
 
             case R.id.menu_item_students_map:
-                Intent goToMap = new Intent(this, MapsActivity.class);
+                Intent goToMap = new Intent(this, MapActivity.class);
                 startActivity(goToMap);
         }
         return super.onOptionsItemSelected(item);
