@@ -25,6 +25,7 @@ public class Locator extends LocationCallback {
 
         this.client = LocationServices.getFusedLocationProviderClient(context);
         this.map = map;
+        
 
 
     }
@@ -44,7 +45,7 @@ public class Locator extends LocationCallback {
 
         Location location = locationResult.getLastLocation();
         LatLng coordinates = new LatLng(location.getAltitude(), location.getLongitude());
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(coordinates);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(coordinates, 17);
         map.moveCamera(cameraUpdate);
 
     }

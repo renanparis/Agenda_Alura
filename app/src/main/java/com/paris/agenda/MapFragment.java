@@ -4,8 +4,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -44,11 +42,6 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         new Locator(getContext(), googleMap);
 
 
-        LatLng position = searchCoordinatesAddress("Rua General Luis Barbedo, 167, Pirassununga");
-        if (position != null) {
-            CameraUpdate update = CameraUpdateFactory.newLatLngZoom(position, 17);
-            googleMap.moveCamera(update);
-        }
 
     }
 
