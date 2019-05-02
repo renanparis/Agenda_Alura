@@ -25,7 +25,7 @@ public class Locator extends LocationCallback {
 
         this.client = LocationServices.getFusedLocationProviderClient(context);
         this.map = map;
-        
+
 
 
     }
