@@ -17,6 +17,7 @@ import com.paris.agenda.FormData;
 import com.paris.agenda.R;
 import com.paris.agenda.com.paris.agenda.db.StudentDao;
 import com.paris.agenda.modelo.Student;
+import com.paris.agenda.task.InsertStudentTask;
 
 import java.io.File;
 
@@ -97,10 +98,15 @@ public class FormActivity extends AppCompatActivity {
                 }
 
                 dao.close();
+
+                new InsertStudentTask(student).execute();
+
                 Toast.makeText(FormActivity.this, "Aluno " + student.getName() + " Salvo com sucesso",
                         Toast.LENGTH_SHORT).show();
                 finish();
                 break;
+
+
         }
         return super.onOptionsItemSelected(item);
     }

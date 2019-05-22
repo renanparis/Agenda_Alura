@@ -15,7 +15,7 @@ public class StudentConvert {
         JSONStringer js = new JSONStringer();
         try {
             js.object().key("list").array().object().key("aluno").array();
-            for (Student student: students) {
+            for (Student student : students) {
                 js.object();
                 js.key("nome").value(student.getName());
                 js.key("nota").value(student.getGrade());
@@ -27,5 +27,22 @@ public class StudentConvert {
         }
 
         return js.toString();
+    }
+
+    public String convertToJSONCompleteStudent(Student student) {
+        JSONStringer js = new JSONStringer();
+        try {
+            js.object().key("nome").value(student.getName())
+                    .key("endereco").value(student.getAddress())
+                    .key("site").value(student.getSite())
+                    .key("telefone").value(student.getPhone())
+                    .key("nota").value(student.getGrade())
+                    .endObject();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return  js.toString();
     }
 }

@@ -10,9 +10,13 @@ import java.util.Scanner;
 public class WebClient {
 
     public String post(String json) {
+        String addressServer = "https://www.caelum.com.br/mobile";
+        return connectToServer(json, addressServer);
+    }
 
+    private String connectToServer(String json, String addressServer) {
         try {
-            URL url = new URL("https://www.caelum.com.br/mobile");
+            URL url = new URL(addressServer);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestProperty("Content-type", "application/json");
             connection.setRequestProperty("Accept", "application/json");
@@ -37,6 +41,13 @@ public class WebClient {
         }
 
         return null;
+    }
+
+    public void insert(String json) {
+
+        String addressServer = "http://192.168.0.103:8080/api/aluno";
+        connectToServer(json, addressServer);
+
 
     }
 }
