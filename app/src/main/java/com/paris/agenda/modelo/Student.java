@@ -5,11 +5,11 @@ import java.io.Serializable;
 public class Student implements Serializable {
 
     private long id;
-    private String name;
-    private String address;
-    private String phone;
+    private String nome;
+    private String endereco;
+    private String telefone;
     private String site;
-    private Double grade;
+    private Double nota;
     private String photo;
 
     public String getPhoto() {
@@ -38,40 +38,40 @@ public class Student implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getNome() {
+        return nome;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
-    public String getAddress() {
-        return address;
+    public String getEndereco() {
+        return endereco;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getTelefone() {
+        return telefone;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
     }
 
-    public Double getGrade() {
-        return grade;
+    public Double getNota() {
+        return nota;
     }
 
-    public void setGrade(Double grade) {
-        this.grade = grade;
+    public void setNota(Double nota) {
+        this.nota = nota;
     }
 
     @Override
     public String toString() {
-        return this.id + "-" + this.name;
+        return this.id + "-" + this.nome;
     }
 }

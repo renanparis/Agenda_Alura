@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,9 +18,13 @@ import com.paris.agenda.FormData;
 import com.paris.agenda.R;
 import com.paris.agenda.com.paris.agenda.db.StudentDao;
 import com.paris.agenda.modelo.Student;
-import com.paris.agenda.task.InsertStudentTask;
+import com.paris.agenda.retrofit.InitializerRetrofit;
 
 import java.io.File;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FormActivity extends AppCompatActivity {
 
@@ -99,9 +104,21 @@ public class FormActivity extends AppCompatActivity {
 
                 dao.close();
 
-                new InsertStudentTask(student).execute();
 
-                Toast.makeText(FormActivity.this, "Aluno " + student.getName() + " Salvo com sucesso",
+                Call<Void> call = new InitializerRetrofit().getStudentService().insert(student);
+                call.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        Log.i("Response", "OK");
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Log.e("Faluire", "Erro");
+                    }
+                });
+
+                Toast.makeText(FormActivity.this, "Aluno " + student.getNome() + " Salvo com sucesso",
                         Toast.LENGTH_SHORT).show();
                 finish();
                 break;

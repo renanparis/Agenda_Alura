@@ -52,13 +52,13 @@ public class StudentAdapter extends BaseAdapter {
         }
 
         TextView fieldName = view.findViewById(R.id.activity_lits_item_name);
-        fieldName.setText(student.getName());
+        fieldName.setText(student.getNome());
         TextView fieldPhone = view.findViewById(R.id.activity_list_item_phone);
-        fieldPhone.setText(student.getPhone());
+        fieldPhone.setText(student.getTelefone());
 
         TextView fieldAddress = view.findViewById(R.id.activity_list_item_address);
         if (fieldAddress!= null){
-            fieldAddress.setText(student.getAddress());
+            fieldAddress.setText(student.getEndereco());
         }
 
         TextView fieldSite = view.findViewById(R.id.activity_list_item_site);

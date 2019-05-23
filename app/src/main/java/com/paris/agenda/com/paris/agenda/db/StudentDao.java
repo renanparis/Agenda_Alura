@@ -49,11 +49,11 @@ public class StudentDao extends SQLiteOpenHelper {
 
     private ContentValues getContentValues(Student student) {
         ContentValues data = new ContentValues();
-        data.put("name", student.getName());
-        data.put("address", student.getAddress());
-        data.put("phone", student.getPhone());
+        data.put("name", student.getNome());
+        data.put("address", student.getEndereco());
+        data.put("phone", student.getTelefone());
         data.put("site", student.getSite());
-        data.put("grade", student.getGrade());
+        data.put("grade", student.getNota());
         data.put("localPhoto", student.getPhoto());
         return data;
     }
@@ -66,11 +66,11 @@ public class StudentDao extends SQLiteOpenHelper {
         while (c.moveToNext()) {
             Student student = new Student();
             student.setId(c.getLong(c.getColumnIndex("id")));
-            student.setName(c.getString(c.getColumnIndex("name")));
-            student.setAddress(c.getString(c.getColumnIndex("address")));
-            student.setPhone(c.getString(c.getColumnIndex("phone")));
+            student.setNome(c.getString(c.getColumnIndex("name")));
+            student.setEndereco(c.getString(c.getColumnIndex("address")));
+            student.setTelefone(c.getString(c.getColumnIndex("phone")));
             student.setSite(c.getString(c.getColumnIndex("site")));
-            student.setGrade(c.getDouble(c.getColumnIndex("grade")));
+            student.setNota(c.getDouble(c.getColumnIndex("grade")));
             student.setPhoto(c.getString(c.getColumnIndex("localPhoto")));
             students.add(student);
         }

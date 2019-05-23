@@ -43,11 +43,4 @@ public class WebClient {
         return null;
     }
 
-    public void insert(String json) {
-
-        String addressServer = "http://192.168.0.103:8080/api/aluno";
-        connectToServer(json, addressServer);
-
-
-    }
 }
