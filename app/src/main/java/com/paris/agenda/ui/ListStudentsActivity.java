@@ -176,13 +176,13 @@ public class ListStudentsActivity extends AppCompatActivity {
 
     private void configButtonMap(Student student, MenuItem visitMap) {
         Intent intentMap = new Intent(Intent.ACTION_VIEW);
-        intentMap.setData(Uri.parse("geo:0,0?q=" + student.getEndereco()));
+        intentMap.setData(Uri.parse("geo:0,0?q=" + student.getAddress()));
         visitMap.setIntent(intentMap);
     }
 
     private void configButtonSms(Student student, MenuItem sendSms) {
         Intent intentSms = new Intent(Intent.ACTION_VIEW);
-        intentSms.setData(Uri.parse("sms:" + student.getTelefone()));
+        intentSms.setData(Uri.parse("sms:" + student.getPhone()));
         sendSms.setIntent(intentSms);
     }
 
@@ -196,7 +196,7 @@ public class ListStudentsActivity extends AppCompatActivity {
                             new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CODE_CALL_PHONE);
                 } else {
                     Intent intentCallPhone = new Intent(Intent.ACTION_CALL);
-                    intentCallPhone.setData(Uri.parse("tel:" + student.getTelefone()));
+                    intentCallPhone.setData(Uri.parse("tel:" + student.getPhone()));
                     startActivity(intentCallPhone);
                 }
 

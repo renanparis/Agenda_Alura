@@ -32,11 +32,11 @@ public class FormData {
 
     public Student getStudent() {
 
-        student.setNome(fieldName.getText().toString());
-        student.setEndereco(fieldAddress.getText().toString());
-        student.setTelefone(fieldPhone.getText().toString());
+        student.setNameStudent(fieldName.getText().toString());
+        student.setAddress(fieldAddress.getText().toString());
+        student.setPhone(fieldPhone.getText().toString());
         student.setSite(fieldSite.getText().toString());
-        student.setNota(Double.valueOf(fieldGrade.getProgress()));
+        student.setGrade(Double.valueOf(fieldGrade.getProgress()));
         student.setPhoto((String) fieldPhoto.getTag());
 
         return student;
@@ -44,11 +44,11 @@ public class FormData {
 
     public void fillOutForm(Student student) {
 
-        fieldName.setText(student.getNome());
-        fieldAddress.setText(student.getEndereco());
-        fieldPhone.setText(student.getTelefone());
+        fieldName.setText(student.getNameStudent());
+        fieldAddress.setText(student.getAddress());
+        fieldPhone.setText(student.getPhone());
         fieldSite.setText(student.getSite());
-        fieldGrade.setProgress(student.getNota().intValue());
+        fieldGrade.setProgress(student.getGrade().intValue());
 
         if (student.getPhoto() != null) {
             loadPhoto(student.getPhoto());

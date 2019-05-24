@@ -2,6 +2,8 @@ package com.paris.agenda.retrofit;
 
 import com.paris.agenda.services.StudentService;
 
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
@@ -12,9 +14,17 @@ public class InitializerRetrofit {
 
     public InitializerRetrofit() {
 
-        retrofit=  new Retrofit.Builder().baseUrl("http://192.168.0.103:8080/api/")
-                 .addConverterFactory(JacksonConverterFactory.create())
-                 .build();
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient.Builder client = new OkHttpClient.Builder();
+
+
+        retrofit = new Retrofit.Builder().baseUrl("http://192.168.0.103:8080/api/")
+                .addConverterFactory(JacksonConverterFactory.create())
+                .client(client.build())
+                .build();
     }
 
     public StudentService getStudentService() {

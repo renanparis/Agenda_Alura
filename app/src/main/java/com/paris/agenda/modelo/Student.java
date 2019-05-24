@@ -1,15 +1,24 @@
 package com.paris.agenda.modelo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serializable;
 
 public class Student implements Serializable {
 
+    @JsonProperty("idCliente")
     private long id;
-    private String nome;
-    private String endereco;
-    private String telefone;
+    @JsonProperty("nome")
+    private String nameStudent;
+    @JsonProperty("endreco")
+    private String address;
+    @JsonProperty("telefone")
+    private String phone;
+
     private String site;
-    private Double nota;
+    @JsonProperty("nota")
+    private Double grade;
+
     private String photo;
 
     public String getPhoto() {
@@ -38,40 +47,40 @@ public class Student implements Serializable {
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public String getNameStudent() {
+        return nameStudent;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setNameStudent(String nameStudent) {
+        this.nameStudent = nameStudent;
     }
 
-    public String getEndereco() {
-        return endereco;
+    public String getAddress() {
+        return address;
     }
 
-    public void setEndereco(String endereco) {
-        this.endereco = endereco;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public String getTelefone() {
-        return telefone;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
-    public Double getNota() {
-        return nota;
+    public Double getGrade() {
+        return grade;
     }
 
-    public void setNota(Double nota) {
-        this.nota = nota;
+    public void setGrade(Double grade) {
+        this.grade = grade;
     }
 
     @Override
     public String toString() {
-        return this.id + "-" + this.nome;
+        return this.id + "-" + this.nameStudent;
     }
 }

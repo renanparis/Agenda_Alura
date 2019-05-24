@@ -118,7 +118,7 @@ public class FormActivity extends AppCompatActivity {
                     }
                 });
 
-                Toast.makeText(FormActivity.this, "Aluno " + student.getNome() + " Salvo com sucesso",
+                Toast.makeText(FormActivity.this, "Aluno " + student.getNameStudent() + " Salvo com sucesso",
                         Toast.LENGTH_SHORT).show();
                 finish();
                 break;

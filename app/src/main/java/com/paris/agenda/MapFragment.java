@@ -29,12 +29,12 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         StudentDao dao = new StudentDao(getContext());
 
         for (Student student : dao.searchStudents()) {
-            LatLng coordinates = searchCoordinatesAddress(student.getEndereco());
+            LatLng coordinates = searchCoordinatesAddress(student.getAddress());
             if (coordinates != null) {
                 MarkerOptions marker = new MarkerOptions();
                 marker.position(coordinates);
-                marker.title(student.getNome());
-                marker.snippet(String.valueOf(student.getNota()));
+                marker.title(student.getNameStudent());
+                marker.snippet(String.valueOf(student.getGrade()));
                 googleMap.addMarker(marker);
             }
         }

@@ -17,8 +17,8 @@ public class StudentConvert {
             js.object().key("list").array().object().key("aluno").array();
             for (Student student : students) {
                 js.object();
-                js.key("nome").value(student.getNome());
-                js.key("nota").value(student.getNota());
+                js.key("nome").value(student.getNameStudent());
+                js.key("nota").value(student.getGrade());
                 js.endObject();
             }
             js.endArray().endObject().endArray().endObject();
