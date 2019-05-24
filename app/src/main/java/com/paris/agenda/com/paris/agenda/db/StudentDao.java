@@ -14,8 +14,8 @@ import java.util.List;
 public class StudentDao extends SQLiteOpenHelper {
 
 
-       public StudentDao(Context context) {
-        super(context, "Agenda", null, 2);
+    public StudentDao(Context context) {
+        super(context, "Agenda", null, 3);
     }
 
     @Override
@@ -33,6 +33,27 @@ public class StudentDao extends SQLiteOpenHelper {
             case 1:
                 sql = "ALTER TABLE Students ADD COLUMN localPhoto TEXT";
                 db.execSQL(sql);
+            case 2:
+                String createNewTable = "CREATE TABLE New_students " +
+                        "(id CHAR(36) PRIMARY KEY," +
+                        " name TEXT NOT NULL, " +
+                        "address TEXT, phone TEXT, " +
+                        "site TEXT, grade REAL, localPhoto TEXT);";
+                db.execSQL(createNewTable);
+
+                String insertsDataNewTable = "INSERT INTO New_students " +
+                        "(id, name, address, phone, site, grade, localPhoto) " +
+                        "SELECT id, name, address, phone, site, grade, localPhoto " +
+                        "FROM Students";
+                db.execSQL(insertsDataNewTable);
+
+                String removeOldTable = "DROP TABLE Students";
+                db.execSQL(removeOldTable);
+
+                String renameNewTable = "ALTER TABLE New_students " +
+                        "RENAME TO Students";
+                db.execSQL(renameNewTable);
+
 
         }
 
@@ -97,12 +118,12 @@ public class StudentDao extends SQLiteOpenHelper {
 
     }
 
-    public boolean isStudent(String phone){
-           SQLiteDatabase db = getReadableDatabase();
-          Cursor c =  db.rawQuery("SELECT * FROM Students WHERE phone = ?", new String[]{phone});
-          int result = c.getCount();
-          c.close();
-          return result >0;
+    public boolean isStudent(String phone) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM Students WHERE phone = ?", new String[]{phone});
+        int result = c.getCount();
+        c.close();
+        return result > 0;
 
     }
 }
