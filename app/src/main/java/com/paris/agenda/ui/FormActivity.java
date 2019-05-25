@@ -96,7 +96,7 @@ public class FormActivity extends AppCompatActivity {
                 Student student = formData.getStudent();
                 StudentDao dao = new StudentDao(this);
 
-                if (student.getId() != 0) {
+                if (student.getId() != null) {
                     dao.updateStudent(student);
                 } else {
                     dao.insertStudent(student);

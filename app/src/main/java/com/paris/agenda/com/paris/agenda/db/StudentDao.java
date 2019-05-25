@@ -5,23 +5,25 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.paris.agenda.modelo.Student;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class StudentDao extends SQLiteOpenHelper {
 
 
     public StudentDao(Context context) {
-        super(context, "Agenda", null, 3);
+        super(context, "Agenda", null, 4);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        String sql = "CREATE TABLE Students(id INTEGER PRIMARY KEY, name TEXT NOT NULL, address TEXT, phone TEXT, site TEXT, grade REAL, localPhoto TEXT); ";
+        String sql = "CREATE TABLE Students(id CHAR(36) PRIMARY KEY, name TEXT NOT NULL, address TEXT, phone TEXT, site TEXT, grade REAL, localPhoto TEXT); ";
         db.execSQL(sql);
 
     }
@@ -54,24 +56,46 @@ public class StudentDao extends SQLiteOpenHelper {
                         "RENAME TO Students";
                 db.execSQL(renameNewTable);
 
+            case 3:
+                String searchStudents = "SELECT * FROM Students";
+                Cursor cursor = db.rawQuery(searchStudents, null);
+                List<Student> students = fillStudents(cursor);
+                String updateIdStudent = "UPDATE Students SET id=? WHERE id=?";
+
+                for (Student student:
+                     students) {
+                    db.execSQL(updateIdStudent, new String [] {createUUID(), student.getId()});
+
+                }
+
+
 
         }
 
     }
 
+    private String createUUID() {
+        return UUID.randomUUID().toString();
+    }
+
     public void insertStudent(Student student) {
 
         SQLiteDatabase db = getWritableDatabase();
+        insertIdIfNecessary(student);
         ContentValues data = getContentValues(student);
+        db.insert("Students", null, data);
 
-        long id = db.insert("Students", null, data);
-        student.setId(id);
+    }
 
-
+    private void insertIdIfNecessary(Student student) {
+        if (student.getId() == null){
+            student.setId(createUUID());
+        }
     }
 
     private ContentValues getContentValues(Student student) {
         ContentValues data = new ContentValues();
+        data.put("id", student.getId());
         data.put("name", student.getNameStudent());
         data.put("address", student.getAddress());
         data.put("phone", student.getPhone());
@@ -85,10 +109,15 @@ public class StudentDao extends SQLiteOpenHelper {
 
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM Students ;", null);
+        List<Student> students = fillStudents(c);
+        return students;
+    }
+
+    private List<Student> fillStudents(Cursor c) {
         List<Student> students = new ArrayList<Student>();
         while (c.moveToNext()) {
             Student student = new Student();
-            student.setId(c.getLong(c.getColumnIndex("id")));
+            student.setId(c.getString(c.getColumnIndex("id")));
             student.setNameStudent(c.getString(c.getColumnIndex("name")));
             student.setAddress(c.getString(c.getColumnIndex("address")));
             student.setPhone(c.getString(c.getColumnIndex("phone")));
@@ -125,5 +154,27 @@ public class StudentDao extends SQLiteOpenHelper {
         c.close();
         return result > 0;
 
+    }
+
+
+    public void synchronize(List<Student> students) {
+        Log.i("aluno", String.valueOf(students));
+        for (Student student:
+             students) {
+            if (exist(student)){
+                updateStudent(student);
+            }else {
+                insertStudent(student);
+            }
+        }
+
+    }
+
+    private boolean exist(Student student) {
+        SQLiteDatabase db = getReadableDatabase();
+        String existId = "SELECT id FROM Students WHERE id=? LIMIT 1";
+        Cursor cursor = db.rawQuery(existId, new String[]{student.getId()});
+        int count = cursor.getCount();
+        return count > 0;
     }
 }

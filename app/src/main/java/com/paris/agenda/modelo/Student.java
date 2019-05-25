@@ -1,21 +1,26 @@
 package com.paris.agenda.modelo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Student implements Serializable {
 
-    @JsonProperty("idCliente")
-    private long id;
+    private String id;
+
     @JsonProperty("nome")
     private String nameStudent;
-    @JsonProperty("endreco")
+
+    @JsonProperty("endereco")
     private String address;
+
     @JsonProperty("telefone")
     private String phone;
 
     private String site;
+
     @JsonProperty("nota")
     private Double grade;
 
@@ -37,13 +42,12 @@ public class Student implements Serializable {
         this.site = site;
     }
 
-   
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

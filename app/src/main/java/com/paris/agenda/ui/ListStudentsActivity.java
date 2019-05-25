@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,9 +22,17 @@ import com.paris.agenda.R;
 import com.paris.agenda.SendStudentTask;
 import com.paris.agenda.adapter.StudentAdapter;
 import com.paris.agenda.com.paris.agenda.db.StudentDao;
+import com.paris.agenda.dto.StudentSync;
 import com.paris.agenda.modelo.Student;
+import com.paris.agenda.retrofit.InitializerRetrofit;
 
 import java.util.List;
+
+import javax.security.auth.login.LoginException;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ListStudentsActivity extends AppCompatActivity {
 
@@ -123,6 +132,24 @@ public class ListStudentsActivity extends AppCompatActivity {
 
     protected void onResume() {
         super.onResume();
+        Call<StudentSync> listStudent = new InitializerRetrofit().getStudentService().listStudent();
+        listStudent.enqueue(new Callback<StudentSync>() {
+            @Override
+            public void onResponse(Call<StudentSync> call, Response<StudentSync> response) {
+               StudentSync studentSync = response.body();
+                StudentDao studentDao = new StudentDao(ListStudentsActivity.this);
+                studentDao.synchronize(studentSync.getAlunos());
+                studentDao.close();
+                updateList();
+            }
+
+            @Override
+            public void onFailure(Call<StudentSync> call, Throwable t) {
+
+                Log.e("onFailure", t.getMessage() );
+
+            }
+        });
         updateList();
 
     }
