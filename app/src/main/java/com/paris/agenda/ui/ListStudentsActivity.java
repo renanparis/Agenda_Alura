@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -29,8 +30,6 @@ import com.paris.agenda.retrofit.InitializerRetrofit;
 
 import java.util.List;
 
-import javax.security.auth.login.LoginException;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,6 +39,7 @@ public class ListStudentsActivity extends AppCompatActivity {
     public static final int REQUEST_CODE_CALL_PHONE = 111;
     public static final int REQUEST_CODE_SMS = 100;
     private ListView listStudents;
+    private SwipeRefreshLayout swipe;
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -47,11 +47,13 @@ public class ListStudentsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lits_students);
+        swipe = findViewById(R.id.swipe_list_students);
         checkPermission();
         final ListView listStudents = configClickList();
         configFab();
         registerForContextMenu(listStudents);
         loadServeList();
+        swipe.setOnRefreshListener(() -> loadServeList());
 
     }
 
@@ -145,12 +147,15 @@ public class ListStudentsActivity extends AppCompatActivity {
                 studentDao.synchronize(studentSync.getAlunos());
                 studentDao.close();
                 updateList();
+                swipe.setRefreshing(false);
             }
 
             @Override
             public void onFailure(Call<StudentSync> call, Throwable t) {
 
                 Log.e("onFailure", t.getMessage());
+                swipe.setRefreshing(false);
+
 
             }
         });
