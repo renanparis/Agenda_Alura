@@ -46,14 +46,12 @@ public class ListStudentsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lits_students);
-
         checkPermission();
-
         final ListView listStudents = configClickList();
-
         configFab();
-
         registerForContextMenu(listStudents);
+        loadServeList();
+
     }
 
     @Override
@@ -103,7 +101,7 @@ public class ListStudentsActivity extends AppCompatActivity {
     }
 
     private ListView configClickList() {
-        final ListView listStudents = (ListView) findViewById(R.id.list_students);
+        final ListView listStudents = findViewById(R.id.list_students);
         listStudents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> list, View item, int position, long id) {
@@ -132,6 +130,11 @@ public class ListStudentsActivity extends AppCompatActivity {
 
     protected void onResume() {
         super.onResume();
+        updateList();
+
+    }
+
+    private void loadServeList() {
         Call<StudentSync> listStudent = new InitializerRetrofit().getStudentService().listStudent();
         listStudent.enqueue(new Callback<StudentSync>() {
             @Override
@@ -150,8 +153,6 @@ public class ListStudentsActivity extends AppCompatActivity {
 
             }
         });
-        updateList();
-
     }
 
     @Override
