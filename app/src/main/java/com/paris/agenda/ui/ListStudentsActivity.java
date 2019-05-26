@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.paris.agenda.R;
 import com.paris.agenda.SendStudentTask;
@@ -139,7 +140,7 @@ public class ListStudentsActivity extends AppCompatActivity {
         listStudent.enqueue(new Callback<StudentSync>() {
             @Override
             public void onResponse(Call<StudentSync> call, Response<StudentSync> response) {
-               StudentSync studentSync = response.body();
+                StudentSync studentSync = response.body();
                 StudentDao studentDao = new StudentDao(ListStudentsActivity.this);
                 studentDao.synchronize(studentSync.getAlunos());
                 studentDao.close();
@@ -149,7 +150,7 @@ public class ListStudentsActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<StudentSync> call, Throwable t) {
 
-                Log.e("onFailure", t.getMessage() );
+                Log.e("onFailure", t.getMessage());
 
             }
         });
@@ -182,10 +183,25 @@ public class ListStudentsActivity extends AppCompatActivity {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
 
-                StudentDao dao = new StudentDao(ListStudentsActivity.this);
-                dao.delete(student);
-                dao.close();
-                updateList();
+                Call<Void> call = new InitializerRetrofit().getStudentService().delete(student.getId());
+                call.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        StudentDao dao = new StudentDao(ListStudentsActivity.this);
+                        dao.delete(student);
+                        dao.close();
+                        updateList();
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Toast.makeText(ListStudentsActivity.this,
+                                "Não foi possível deletar o aluno", Toast.LENGTH_LONG).show();
+
+                    }
+                });
+
+
                 return false;
             }
         };
