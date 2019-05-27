@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "645190979558",
+    "firebase_url": "https://agenda-sync-60e6c.firebaseio.com",
+    "project_id": "agenda-sync-60e6c",
+    "storage_bucket": "agenda-sync-60e6c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:645190979558:android:e0c62d4cb5322e4e",
+        "android_client_info": {
+          "package_name": "com.paris.agenda"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "645190979558-ujtblemapuffh7fqhc4kc1h5ua9as1ti.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.paris.agenda",
+            "certificate_hash": "d6739935701d6d76cf0eef87dda0c52ddc001112"
+          }
+        },
+        {
+          "client_id": "645190979558-ifc3sucm0m3ai4rl9gtimc89l172l47j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVXMtWGJrAvacfn-Z1MgkaJ0sefuu-cIU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "645190979558-ifc3sucm0m3ai4rl9gtimc89l172l47j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
