@@ -1,5 +1,6 @@
 package com.paris.agenda.retrofit;
 
+import com.paris.agenda.services.DeviceService;
 import com.paris.agenda.services.StudentService;
 
 import okhttp3.OkHttpClient;
@@ -31,4 +32,10 @@ public class InitializerRetrofit {
     public StudentService getStudentService() {
         return retrofit.create(StudentService.class);
     }
+
+
+    public DeviceService getDeviceService() {
+        return retrofit.create(DeviceService.class);
+    }
+
 }

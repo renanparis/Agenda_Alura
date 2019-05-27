@@ -6,11 +6,11 @@ import java.util.List;
 
 public class StudentSync {
 
-    private List<Student> alunos;
+    private List<Student> students;
     private String momentoDaUltimaModificacao;
 
-    public List<Student> getAlunos() {
-        return alunos;
+    public List<Student> getStudents() {
+        return students;
     }
 
     public String getMomentoDaUltimaModificacao() {

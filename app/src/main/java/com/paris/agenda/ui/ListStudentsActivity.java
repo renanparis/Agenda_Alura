@@ -144,7 +144,7 @@ public class ListStudentsActivity extends AppCompatActivity {
             public void onResponse(Call<StudentSync> call, Response<StudentSync> response) {
                 StudentSync studentSync = response.body();
                 StudentDao studentDao = new StudentDao(ListStudentsActivity.this);
-                studentDao.synchronize(studentSync.getAlunos());
+                studentDao.synchronize(studentSync.getStudents());
                 studentDao.close();
                 updateList();
                 swipe.setRefreshing(false);
