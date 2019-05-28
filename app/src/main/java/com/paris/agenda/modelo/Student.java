@@ -26,6 +26,19 @@ public class Student implements Serializable {
 
     private String photo;
 
+    @JsonProperty("desativado")
+    private int disabled;
+
+    private int synced;
+
+    public int getSynced() {
+        return synced;
+    }
+
+    public void setSynced(int synced) {
+        this.synced = synced;
+    }
+
     public int getDisabled() {
         return disabled;
     }
@@ -34,8 +47,7 @@ public class Student implements Serializable {
         this.disabled = disabled;
     }
 
-    @JsonProperty("desativado")
-    private int disabled;
+
 
     public String getPhoto() {
         return photo;
@@ -102,5 +114,18 @@ public class Student implements Serializable {
     public boolean isDesabled() {
 
         return disabled ==1;
+    }
+
+    public void synchrnize() {
+        this.synced = 1;
+    }
+
+    public void notSynced() {
+        this.synced = 0;
+    }
+
+    public void disabledStudent() {
+        this.disabled = 1;
+        notSynced();
     }
 }

@@ -17,13 +17,21 @@ public class StudentDao extends SQLiteOpenHelper {
 
 
     public StudentDao(Context context) {
-        super(context, "Agenda", null, 4);
+        super(context, "Agenda", null, 6);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        String sql = "CREATE TABLE Students(id CHAR(36) PRIMARY KEY, name TEXT NOT NULL, address TEXT, phone TEXT, site TEXT, grade REAL, localPhoto TEXT); ";
+        String sql = "CREATE TABLE Students(id CHAR(36) PRIMARY KEY," +
+                " name TEXT NOT NULL, " +
+                "address TEXT, " +
+                "phone TEXT, " +
+                "site TEXT," +
+                " grade REAL," +
+                " localPhoto TEXT," +
+                "synced INT DEFAULT 0," +
+                "disabled INT DEFAULT 0); ";
         db.execSQL(sql);
 
     }
@@ -62,12 +70,20 @@ public class StudentDao extends SQLiteOpenHelper {
                 List<Student> students = fillStudents(cursor);
                 String updateIdStudent = "UPDATE Students SET id=? WHERE id=?";
 
-                for (Student student:
-                     students) {
-                    db.execSQL(updateIdStudent, new String [] {createUUID(), student.getId()});
+                for (Student student :
+                        students) {
+                    db.execSQL(updateIdStudent, new String[]{createUUID(), student.getId()});
 
                 }
+            case 4:
 
+                String addFieldSynced = "ALTER TABLE Students ADD COLUMN synced INT DEFAULT 0";
+                db.execSQL(addFieldSynced);
+
+            case 5:
+
+                String disableStudent = "ALTER TABLE Students ADD COLUMN disabled INT DEFAULT 0";
+                db.execSQL(disableStudent);
 
 
         }
@@ -88,7 +104,7 @@ public class StudentDao extends SQLiteOpenHelper {
     }
 
     private void insertIdIfNecessary(Student student) {
-        if (student.getId() == null){
+        if (student.getId() == null) {
             student.setId(createUUID());
         }
     }
@@ -102,13 +118,15 @@ public class StudentDao extends SQLiteOpenHelper {
         data.put("site", student.getSite());
         data.put("grade", student.getGrade());
         data.put("localPhoto", student.getPhoto());
+        data.put("synced", student.getSynced());
+        data.put("disabled", student.getDisabled());
         return data;
     }
 
     public List<Student> searchStudents() {
 
         SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM Students ;", null);
+        Cursor c = db.rawQuery("SELECT * FROM Students WHERE disabled = 0 ;", null);
         List<Student> students = fillStudents(c);
         return students;
     }
@@ -124,6 +142,8 @@ public class StudentDao extends SQLiteOpenHelper {
             student.setSite(c.getString(c.getColumnIndex("site")));
             student.setGrade(c.getDouble(c.getColumnIndex("grade")));
             student.setPhoto(c.getString(c.getColumnIndex("localPhoto")));
+            student.setSynced(c.getInt(c.getColumnIndex("synced")));
+            student.setDisabled(c.getInt(c.getColumnIndex("disabled")));
             students.add(student);
         }
         c.close();
@@ -133,7 +153,14 @@ public class StudentDao extends SQLiteOpenHelper {
     public void delete(Student student) {
         SQLiteDatabase db = getWritableDatabase();
         String[] params = {String.valueOf(student.getId())};
-        db.delete("Students", "id=?", params);
+
+        if (student.isDesabled()){
+            db.delete("Students", "id=?", params);
+
+        }else {
+            student.disabledStudent();
+            updateStudent(student);
+        }
 
     }
 
@@ -159,17 +186,19 @@ public class StudentDao extends SQLiteOpenHelper {
 
     public void synchronize(List<Student> students) {
         Log.i("aluno", String.valueOf(students));
-        for (Student student:
-             students) {
-            if (exist(student)){
-                if (student.isDesabled()){
+        for (Student student :
+                students) {
+
+            student.synchrnize();
+            if (exist(student)) {
+                if (student.isDesabled()) {
                     delete(student);
 
-                }else {
+                } else {
                     updateStudent(student);
 
                 }
-            }else if (!student.isDesabled()){
+            } else if (!student.isDesabled()) {
                 insertStudent(student);
             }
         }
@@ -182,5 +211,14 @@ public class StudentDao extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(existId, new String[]{student.getId()});
         int count = cursor.getCount();
         return count > 0;
+    }
+
+    public List<Student> studentsNotSynced() {
+
+        SQLiteDatabase db = getReadableDatabase();
+        String searchStudentsNotSynced = "SELECT * FROM Students WHERE synced = 0";
+        Cursor c = db.rawQuery(searchStudentsNotSynced, null);
+        return fillStudents(c);
+
     }
 }

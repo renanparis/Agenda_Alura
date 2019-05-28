@@ -96,6 +96,8 @@ public class FormActivity extends AppCompatActivity {
                 Student student = formData.getStudent();
                 StudentDao dao = new StudentDao(this);
 
+                student.notSynced();
+
                 if (student.getId() != null) {
                     dao.updateStudent(student);
                 } else {

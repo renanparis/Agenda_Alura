@@ -6,10 +6,13 @@ import android.util.Log;
 import com.paris.agenda.com.paris.agenda.db.StudentDao;
 import com.paris.agenda.dto.StudentSync;
 import com.paris.agenda.event.UpdateListStudentEvent;
+import com.paris.agenda.modelo.Student;
 import com.paris.agenda.preferences.StudentPreferences;
 import com.paris.agenda.retrofit.InitializerRetrofit;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -67,6 +70,10 @@ public class Synchroinize {
 
                 eventBus.post(new UpdateListStudentEvent());
 
+                loadStudentsNotsynced();
+
+
+
             }
 
             @Override
@@ -76,7 +83,46 @@ public class Synchroinize {
                 eventBus.post(new UpdateListStudentEvent());
 
 
+
             }
         };
+    }
+    
+    private void loadStudentsNotsynced(){
+        StudentDao dao = new StudentDao(context);
+        List<Student> students = dao.studentsNotSynced();
+        Call<StudentSync> call= new InitializerRetrofit().getStudentService().updateListStudent(students);
+        call.enqueue(new Callback<StudentSync>() {
+            @Override
+            public void onResponse(Call<StudentSync> call, Response<StudentSync> response) {
+                StudentSync studentSync = response.body();
+                dao.synchronize(studentSync.getAlunos());
+                dao.close();
+            }
+
+            @Override
+            public void onFailure(Call<StudentSync> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void deleteStudentServer(Student student) {
+
+        Call<Void> call = new InitializerRetrofit().getStudentService().delete(student.getId());
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+
+                StudentDao dao = new StudentDao(context);
+                dao.delete(student);
+
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
     }
 }

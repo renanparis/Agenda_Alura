@@ -10,6 +10,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,7 +18,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.paris.agenda.R;
 import com.paris.agenda.SendStudentTask;
@@ -25,7 +25,6 @@ import com.paris.agenda.adapter.StudentAdapter;
 import com.paris.agenda.com.paris.agenda.db.StudentDao;
 import com.paris.agenda.event.UpdateListStudentEvent;
 import com.paris.agenda.modelo.Student;
-import com.paris.agenda.retrofit.InitializerRetrofit;
 import com.paris.agenda.sync.Synchroinize;
 
 import org.greenrobot.eventbus.EventBus;
@@ -33,10 +32,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ListStudentsActivity extends AppCompatActivity {
 
@@ -60,7 +55,9 @@ public class ListStudentsActivity extends AppCompatActivity {
         configFab();
         registerForContextMenu(listStudents);
         synchroinize.loadAllStudents();
-        swipe.setOnRefreshListener(() -> synchroinize.loadAllStudents());
+        swipe.setOnRefreshListener(() -> {
+            synchroinize.loadAllStudents();
+        });
 
 
     }
@@ -136,16 +133,20 @@ public class ListStudentsActivity extends AppCompatActivity {
         List<Student> students = dao.searchStudents();
         dao.close();
         listStudents = findViewById(R.id.list_students);
-
         StudentAdapter adapter = new StudentAdapter(ListStudentsActivity.this, students);
-
         listStudents.setAdapter(adapter);
+
+        for (Student student:
+             students) {
+            Log.i("Sincronizado", String.valueOf(student.getSynced()));
+        }
 
     }
 
     protected void onResume() {
         super.onResume();
         eventBus.register(this);
+        updateList();
 
     }
 
@@ -181,23 +182,12 @@ public class ListStudentsActivity extends AppCompatActivity {
     private MenuItem.OnMenuItemClickListener configButtonDelete(final Student student) {
         return item -> {
 
-            Call<Void> call = new InitializerRetrofit().getStudentService().delete(student.getId());
-            call.enqueue(new Callback<Void>() {
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
-                    StudentDao dao = new StudentDao(ListStudentsActivity.this);
-                    dao.delete(student);
-                    dao.close();
-                    updateList();
-                }
+            StudentDao dao = new StudentDao(ListStudentsActivity.this);
+            dao.delete(student);
+            dao.close();
+            updateList();
 
-                @Override
-                public void onFailure(Call<Void> call, Throwable t) {
-                    Toast.makeText(ListStudentsActivity.this,
-                            "Não foi possível deletar o aluno", Toast.LENGTH_LONG).show();
-
-                }
-            });
+            synchroinize.deleteStudentServer(student);
 
 
             return false;
