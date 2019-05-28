@@ -26,6 +26,17 @@ public class Student implements Serializable {
 
     private String photo;
 
+    public int getDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(int disabled) {
+        this.disabled = disabled;
+    }
+
+    @JsonProperty("desativado")
+    private int disabled;
+
     public String getPhoto() {
         return photo;
     }
@@ -86,5 +97,10 @@ public class Student implements Serializable {
     @Override
     public String toString() {
         return this.id + "-" + this.nameStudent;
+    }
+
+    public boolean isDesabled() {
+
+        return disabled ==1;
     }
 }

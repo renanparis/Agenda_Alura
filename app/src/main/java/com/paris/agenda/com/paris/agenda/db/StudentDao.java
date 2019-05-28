@@ -162,8 +162,14 @@ public class StudentDao extends SQLiteOpenHelper {
         for (Student student:
              students) {
             if (exist(student)){
-                updateStudent(student);
-            }else {
+                if (student.isDesabled()){
+                    delete(student);
+
+                }else {
+                    updateStudent(student);
+
+                }
+            }else if (!student.isDesabled()){
                 insertStudent(student);
             }
         }
