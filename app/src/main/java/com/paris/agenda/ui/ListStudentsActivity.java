@@ -10,7 +10,6 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,10 +23,10 @@ import com.paris.agenda.R;
 import com.paris.agenda.SendStudentTask;
 import com.paris.agenda.adapter.StudentAdapter;
 import com.paris.agenda.com.paris.agenda.db.StudentDao;
-import com.paris.agenda.dto.StudentSync;
 import com.paris.agenda.event.UpdateListStudentEvent;
 import com.paris.agenda.modelo.Student;
 import com.paris.agenda.retrofit.InitializerRetrofit;
+import com.paris.agenda.sync.Synchroinize;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -43,6 +42,7 @@ public class ListStudentsActivity extends AppCompatActivity {
 
     public static final int REQUEST_CODE_CALL_PHONE = 111;
     public static final int REQUEST_CODE_SMS = 100;
+    private final Synchroinize synchroinize = new Synchroinize(this);
     private ListView listStudents;
     private SwipeRefreshLayout swipe;
     private EventBus eventBus;
@@ -59,14 +59,15 @@ public class ListStudentsActivity extends AppCompatActivity {
         final ListView listStudents = configClickList();
         configFab();
         registerForContextMenu(listStudents);
-        loadServeList();
-        swipe.setOnRefreshListener(() -> loadServeList());
+        synchroinize.loadServeList();
+        swipe.setOnRefreshListener(() -> synchroinize.loadServeList());
 
 
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void upadteListStudentEvent(UpdateListStudentEvent event) {
+        if(swipe.isRefreshing()) swipe.setRefreshing(false);
         updateList();
 
     }
@@ -156,27 +157,7 @@ public class ListStudentsActivity extends AppCompatActivity {
     }
 
     private void loadServeList() {
-        Call<StudentSync> listStudent = new InitializerRetrofit().getStudentService().listStudent();
-        listStudent.enqueue(new Callback<StudentSync>() {
-            @Override
-            public void onResponse(Call<StudentSync> call, Response<StudentSync> response) {
-                StudentSync studentSync = response.body();
-                StudentDao studentDao = new StudentDao(ListStudentsActivity.this);
-                studentDao.synchronize(studentSync.getAlunos());
-                studentDao.close();
-                updateList();
-                swipe.setRefreshing(false);
-            }
-
-            @Override
-            public void onFailure(Call<StudentSync> call, Throwable t) {
-
-                Log.e("onFailure", t.getMessage());
-                swipe.setRefreshing(false);
-
-
-            }
-        });
+        synchroinize.loadServeList();
     }
 
     @Override
