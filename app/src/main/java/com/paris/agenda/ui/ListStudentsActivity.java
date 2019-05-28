@@ -25,8 +25,13 @@ import com.paris.agenda.SendStudentTask;
 import com.paris.agenda.adapter.StudentAdapter;
 import com.paris.agenda.com.paris.agenda.db.StudentDao;
 import com.paris.agenda.dto.StudentSync;
+import com.paris.agenda.event.UpdateListStudentEvent;
 import com.paris.agenda.modelo.Student;
 import com.paris.agenda.retrofit.InitializerRetrofit;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -40,6 +45,7 @@ public class ListStudentsActivity extends AppCompatActivity {
     public static final int REQUEST_CODE_SMS = 100;
     private ListView listStudents;
     private SwipeRefreshLayout swipe;
+    private EventBus eventBus;
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -47,6 +53,7 @@ public class ListStudentsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lits_students);
+        eventBus = EventBus.getDefault();
         swipe = findViewById(R.id.swipe_list_students);
         checkPermission();
         final ListView listStudents = configClickList();
@@ -54,6 +61,13 @@ public class ListStudentsActivity extends AppCompatActivity {
         registerForContextMenu(listStudents);
         loadServeList();
         swipe.setOnRefreshListener(() -> loadServeList());
+
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void upadteListStudentEvent(UpdateListStudentEvent event) {
+        updateList();
 
     }
 
@@ -93,13 +107,10 @@ public class ListStudentsActivity extends AppCompatActivity {
 
     private void configFab() {
         Button newStudent = findViewById(R.id.add_student);
-        newStudent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ListStudentsActivity.this, FormActivity.class);
-                startActivity(intent);
+        newStudent.setOnClickListener(v -> {
+            Intent intent = new Intent(ListStudentsActivity.this, FormActivity.class);
+            startActivity(intent);
 
-            }
         });
     }
 
@@ -133,8 +144,15 @@ public class ListStudentsActivity extends AppCompatActivity {
 
     protected void onResume() {
         super.onResume();
+        eventBus.register(this);
         updateList();
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        eventBus.unregister(this);
     }
 
     private void loadServeList() {
@@ -144,7 +162,7 @@ public class ListStudentsActivity extends AppCompatActivity {
             public void onResponse(Call<StudentSync> call, Response<StudentSync> response) {
                 StudentSync studentSync = response.body();
                 StudentDao studentDao = new StudentDao(ListStudentsActivity.this);
-                studentDao.synchronize(studentSync.getStudents());
+                studentDao.synchronize(studentSync.getAlunos());
                 studentDao.close();
                 updateList();
                 swipe.setRefreshing(false);

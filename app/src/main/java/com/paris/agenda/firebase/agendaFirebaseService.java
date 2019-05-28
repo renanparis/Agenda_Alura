@@ -2,10 +2,17 @@ package com.paris.agenda.firebase;
 
 import android.util.Log;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.paris.agenda.com.paris.agenda.db.StudentDao;
+import com.paris.agenda.dto.StudentSync;
+import com.paris.agenda.event.UpdateListStudentEvent;
 import com.paris.agenda.retrofit.InitializerRetrofit;
 
+import org.greenrobot.eventbus.EventBus;
+
+import java.io.IOException;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -20,8 +27,27 @@ public class agendaFirebaseService extends FirebaseMessagingService {
 
         Map<String, String> message = remoteMessage.getData();
         Log.i("Mensagem Recebida", String.valueOf(message));
+
+        convertToStudent(message);
     }
 
+    private void convertToStudent(Map<String, String> message) {
+        String accessKey = "alunoSync";
+        if (message.containsKey(accessKey)){
+            String json = message.get(accessKey);
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                StudentSync studentSync = mapper.readValue(json, StudentSync.class);
+                StudentDao studentDao = new StudentDao(this);
+                studentDao.synchronize(studentSync.getAlunos());
+                studentDao.close();
+                EventBus eventBus = EventBus.getDefault();
+                eventBus.post(new UpdateListStudentEvent());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
 
     @Override
