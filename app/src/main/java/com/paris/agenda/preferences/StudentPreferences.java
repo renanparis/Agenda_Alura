@@ -32,4 +32,8 @@ public class StudentPreferences {
         return preferences.getString(DATA_VERSION, "");
 
     }
+
+    public boolean hasVersion() {
+        return !getVersion().isEmpty();
+    }
 }

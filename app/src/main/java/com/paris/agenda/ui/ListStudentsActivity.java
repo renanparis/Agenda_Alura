@@ -59,8 +59,8 @@ public class ListStudentsActivity extends AppCompatActivity {
         final ListView listStudents = configClickList();
         configFab();
         registerForContextMenu(listStudents);
-        synchroinize.loadServeList();
-        swipe.setOnRefreshListener(() -> synchroinize.loadServeList());
+        synchroinize.loadAllStudents();
+        swipe.setOnRefreshListener(() -> synchroinize.loadAllStudents());
 
 
     }
@@ -146,7 +146,6 @@ public class ListStudentsActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         eventBus.register(this);
-        updateList();
 
     }
 
@@ -156,9 +155,6 @@ public class ListStudentsActivity extends AppCompatActivity {
         eventBus.unregister(this);
     }
 
-    private void loadServeList() {
-        synchroinize.loadServeList();
-    }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, final ContextMenu.ContextMenuInfo menuInfo) {
@@ -183,31 +179,28 @@ public class ListStudentsActivity extends AppCompatActivity {
     }
 
     private MenuItem.OnMenuItemClickListener configButtonDelete(final Student student) {
-        return new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
+        return item -> {
 
-                Call<Void> call = new InitializerRetrofit().getStudentService().delete(student.getId());
-                call.enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
-                        StudentDao dao = new StudentDao(ListStudentsActivity.this);
-                        dao.delete(student);
-                        dao.close();
-                        updateList();
-                    }
+            Call<Void> call = new InitializerRetrofit().getStudentService().delete(student.getId());
+            call.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    StudentDao dao = new StudentDao(ListStudentsActivity.this);
+                    dao.delete(student);
+                    dao.close();
+                    updateList();
+                }
 
-                    @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
-                        Toast.makeText(ListStudentsActivity.this,
-                                "Não foi possível deletar o aluno", Toast.LENGTH_LONG).show();
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    Toast.makeText(ListStudentsActivity.this,
+                            "Não foi possível deletar o aluno", Toast.LENGTH_LONG).show();
 
-                    }
-                });
+                }
+            });
 
 
-                return false;
-            }
+            return false;
         };
     }
 
@@ -235,21 +228,18 @@ public class ListStudentsActivity extends AppCompatActivity {
     }
 
     private MenuItem.OnMenuItemClickListener configButtonCallPhone(final Student student) {
-        return new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                if (ActivityCompat.checkSelfPermission(ListStudentsActivity.this, Manifest.permission.CALL_PHONE)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(ListStudentsActivity.this,
-                            new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CODE_CALL_PHONE);
-                } else {
-                    Intent intentCallPhone = new Intent(Intent.ACTION_CALL);
-                    intentCallPhone.setData(Uri.parse("tel:" + student.getPhone()));
-                    startActivity(intentCallPhone);
-                }
-
-                return false;
+        return item -> {
+            if (ActivityCompat.checkSelfPermission(ListStudentsActivity.this, Manifest.permission.CALL_PHONE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(ListStudentsActivity.this,
+                        new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CODE_CALL_PHONE);
+            } else {
+                Intent intentCallPhone = new Intent(Intent.ACTION_CALL);
+                intentCallPhone.setData(Uri.parse("tel:" + student.getPhone()));
+                startActivity(intentCallPhone);
             }
+
+            return false;
         };
     }
 

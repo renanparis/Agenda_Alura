@@ -20,20 +20,43 @@ public class Synchroinize {
 
     private final Context context;
     private final EventBus eventBus = EventBus.getDefault();
+    private StudentPreferences preferences;
 
     public Synchroinize(Context context) {
         this.context = context;
+        preferences = new StudentPreferences(context);
     }
 
-    public void loadServeList() {
-        Call<StudentSync> listStudent = new InitializerRetrofit().getStudentService().listStudent();
-        listStudent.enqueue(new Callback<StudentSync>() {
+    public void loadAllStudents() {
+
+        if (preferences.hasVersion()) {
+            loadNewStudents();
+
+        } else {
+            loadServeList();
+        }
+    }
+
+    private void loadNewStudents() {
+        String version = preferences.getVersion();
+        Call<StudentSync> call = new InitializerRetrofit().getStudentService().newStudent(version);
+        call.enqueue(getCallback());
+
+    }
+
+
+    private void loadServeList() {
+        Call<StudentSync> call = new InitializerRetrofit().getStudentService().listStudent();
+        call.enqueue(getCallback());
+    }
+
+    private Callback<StudentSync> getCallback() {
+        return new Callback<StudentSync>() {
             @Override
             public void onResponse(Call<StudentSync> call, Response<StudentSync> response) {
                 StudentSync studentSync = response.body();
 
                 String version = studentSync.getMomentoDaUltimaModificacao();
-                StudentPreferences preferences = new StudentPreferences(context);
                 preferences.saveVersion(version);
 
                 StudentDao studentDao = new StudentDao(context);
@@ -53,8 +76,7 @@ public class Synchroinize {
                 eventBus.post(new UpdateListStudentEvent());
 
 
-
             }
-        });
+        };
     }
 }
