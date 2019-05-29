@@ -59,21 +59,13 @@ public class Synchroinize {
             public void onResponse(Call<StudentSync> call, Response<StudentSync> response) {
                 StudentSync studentSync = response.body();
 
-                String version = studentSync.getMomentoDaUltimaModificacao();
-                preferences.saveVersion(version);
-
-                StudentDao studentDao = new StudentDao(context);
-                studentDao.synchronize(studentSync.getAlunos());
-                studentDao.close();
+                synchronize(studentSync);
 
                 Log.i("Versão", preferences.getVersion());
 
                 eventBus.post(new UpdateListStudentEvent());
 
-                loadStudentsNotsynced();
-
-
-
+                loadStudentsNotSynced();
             }
 
             @Override
@@ -82,22 +74,34 @@ public class Synchroinize {
                 Log.e("onFailure", t.getMessage());
                 eventBus.post(new UpdateListStudentEvent());
 
-
-
             }
         };
     }
-    
-    private void loadStudentsNotsynced(){
+
+    public void synchronize(StudentSync studentSync) {
+        String version = studentSync.getMomentoDaUltimaModificacao();
+
+
+        if (preferences.hasNewVersion(version)){
+            preferences.saveVersion(version);
+            StudentDao studentDao = new StudentDao(context);
+            studentDao.synchronize(studentSync.getAlunos());
+            studentDao.close();
+        }
+
+    }
+
+    private void loadStudentsNotSynced(){
         StudentDao dao = new StudentDao(context);
         List<Student> students = dao.studentsNotSynced();
+        dao.close();
+
         Call<StudentSync> call= new InitializerRetrofit().getStudentService().updateListStudent(students);
         call.enqueue(new Callback<StudentSync>() {
             @Override
             public void onResponse(Call<StudentSync> call, Response<StudentSync> response) {
                 StudentSync studentSync = response.body();
-                dao.synchronize(studentSync.getAlunos());
-                dao.close();
+                synchronize(studentSync);
             }
 
             @Override

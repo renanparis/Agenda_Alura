@@ -5,10 +5,10 @@ import android.util.Log;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.paris.agenda.com.paris.agenda.db.StudentDao;
 import com.paris.agenda.dto.StudentSync;
 import com.paris.agenda.event.UpdateListStudentEvent;
 import com.paris.agenda.retrofit.InitializerRetrofit;
+import com.paris.agenda.sync.Synchroinize;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -19,7 +19,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class agendaFirebaseService extends FirebaseMessagingService {
+public class AgendaFirebaseService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -38,9 +38,7 @@ public class agendaFirebaseService extends FirebaseMessagingService {
             ObjectMapper mapper = new ObjectMapper();
             try {
                 StudentSync studentSync = mapper.readValue(json, StudentSync.class);
-                StudentDao studentDao = new StudentDao(this);
-                studentDao.synchronize(studentSync.getAlunos());
-                studentDao.close();
+               new Synchroinize(AgendaFirebaseService.this).synchronize(studentSync);
                 EventBus eventBus = EventBus.getDefault();
                 eventBus.post(new UpdateListStudentEvent());
             } catch (IOException e) {

@@ -3,6 +3,10 @@ package com.paris.agenda.preferences;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class StudentPreferences {
 
 
@@ -35,5 +39,21 @@ public class StudentPreferences {
 
     public boolean hasVersion() {
         return !getVersion().isEmpty();
+    }
+
+    public boolean hasNewVersion(String version) {
+        if (!hasVersion()) return true;
+
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
+            try {
+                Date externalDate = format.parse(version);
+                String internalVersion = getVersion();
+                Date internalDate = format.parse(internalVersion);
+                return externalDate.after(internalDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+        return false;
     }
 }
